@@ -1,0 +1,39 @@
+![image](https://github.com/user-attachments/assets/2c70014f-f27c-48da-86af-007d33d8c41b)
+## Solution
+The high level approach to solving this question is to break down the solution into smaller parts/steps:
+
+Fetch the list of all job IDs.
+With the list of job IDs, fetch job details for the current page of job IDs.
+Present the jobs data in a card format.
+Trigger the fetching of job details again when the "Load more jobs" button is pressed.
+State
+The code utilizes several state variables to manage the application's behavior and data flow:
+
+fetchingJobDetails: Keeps track of whether job details are currently being fetched from the API. It is used to disable the "Load more" button and provide feedback to the user during the fetching process.
+page: The current page number which determines which set of job IDs and details to fetch. It is incremented when the user clicks on the "Load more" button.
+jobIds: An array of job IDs retrieved from the Hacker News API. It is initially set to null and later populated with data from the API. It allows for pagination and fetching job details based on the IDs.
+jobs: Maintains an array of job objects containing details like job title, author, time, and URL. It is initially an empty array and is updated when fetching job details from the API.
+Rendering
+Some notable aspects of the rendering code include:
+
+The use of CSS Grid for the list of posts: The job postings are displayed in a grid layout using the display: grid CSS property. This is a convenient way to allow consistent spacing between job postings.
+Styling of the "Load more" button: The "Load more" button is styled with a specific background color, border, and padding to make it visually prominent. The button also changes color on hover to provide visual feedback to the user.
+Fetching Data
+fetchJobIds
+This asynchronous method is responsible for fetching the current page's list of job IDs from the Hacker News API and is called with the current page number as an argument.
+
+Since the API only has a single endpoint to fetch all the top job listings, we only need to fetch the list once and save it as jobIds in state by making a GET request to the API endpoint. Once the job IDs are retrieved, it slices the array based on the current page and returns the relevant subset of job IDs. Subsequent calls to this function will just be slicing the array without fetching the data again.
+
+fetchJobs
+This asynchronous method fetches the job details based on the job IDs obtained from the fetchJobIds method. It is called with the current page number as an argument. Inside the method, it calls fetchJobIds(currPage) to get the job IDs for the current page then sets the fetchingJobDetails state variable to true to indicate that job details are being fetched. Using Promise.all, it makes multiple GET requests to the Hacker News API to fetch the details of each job, using the current page's job IDs. Once the job details are obtained, it updates the jobs state variable by appending the newly-fetched jobs to the existing ones. Finally, it sets fetchingJobDetails back to false to indicate that the fetching process is complete.
+
+The useEffect hook is responsible for triggering the fetchJobs method whenever the page state variable changes. It ensures that when the page number is updated (e.g., when the user clicks the "Load more" button), the fetchJobs method is called to fetch the corresponding job details for the new page. It's recommended to use useEffect to sync the jobs details data with the current page instead of triggering fetchJobs on clicking the "Load more" button because it can easily extend to additional sources of pagination, such as infinite scrolling, additional pagination buttons, etc.
+
+In React, useEffect (and hence fetchJobs) runs twice on component mount during development in Strict Mode. Does this mean the fetched jobs details are added twice to the jobs array? Thankfully, since the value of jobs within the closure of fetchJobs is the same, the resulting combinedJobs will be the same, assuming the results for the API stays the same between requests.
+
+Handling race conditions
+When dealing with async requests, race conditions can happen which can lead to bugs:
+
+Request completing after the component has unmounted. We can use a ref in React to track component mount status and ignore requests that complete after the component is no longer mounted.
+Requests not returning in order. Out-of-order requests is mostly not a problem in this app because we only allow fetching one page of jobs at a single time. Job details for a page are fetched in parallel and are only added after all the requests are completed. fetchJobs being called twice by useEffect on mount has a race condition problem but it has been handled as mentioned above.
+Test Cases
