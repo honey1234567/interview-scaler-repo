@@ -1,0 +1,27 @@
+Build a traffic light where the lights switch from green to yellow to red after predetermined intervals and loop indefinitely. Each light should be lit for the following durations:
+
+Red light: 4000ms
+Yellow light: 500ms
+Green light: 3000ms
+/////////////////////////
+Data Model
+Traffic lights are simple state machines where each color is a state and each state is shown for a fixed duration before moving to the next. We can capture the state information (how long to remain in each color for and which color to transition to) using a simple JavaScript object:
+
+const config = {
+  red: {
+    duration: 4000,
+    next: 'green',
+  },
+  yellow: {
+    duration: 500,
+    next: 'red',
+  },
+  green: {
+    duration: 3000,
+    next: 'yellow',
+  },
+};
+Within the TrafficLight component, we only need a single state variable, which is the current color. We also set a timer via setTimeout to transition to the next color by looking up the config object to know what the next color is and when to do so. Do remember to clear the timer upon unmounting of the component to prevent "setState on unmounted component" errors and memory leaks.
+
+Rendering
+The rendering of this component is pretty straightforward and can be achieved with Flexbox. With Flexbox, it's also easy to change the layout of the lights from a vertical one to a horizontal one just by changing the flex-direction property.
