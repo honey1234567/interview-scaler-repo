@@ -139,23 +139,8 @@ Java
 Protocol Buffers' LazyStringList.
 Google's Protocol Buffers library for Java provides an interface called com.google.protobuf.LazyStringList. This interface extends List<String> and allows for lazy conversion of byte arrays (received over the wire) to String objects, improving efficiency by only converting when necessary. Lazy Evaluation in Streams.
 Java Streams are inherently lazy. Operations like map, filter, and flatMap are intermediate operations and do not execute immediately. The actual processing of the stream elements, including the creation of new String objects, only occurs when a terminal operation (like collect, forEach, or count) is invoked. Conditional String Creation.
-Simple conditional statements can also achieve a form of lazy string creation, where a string is only constructed if a certain condition is met.
-Java
 
-    public class ConditionalStringExample {
-        public String getLogMessage(boolean debugMode) {
-            if (debugMode) {
-                return "Debug message: " + System.currentTimeMillis(); // String created only if debugMode is true
-            }
-            return null;
-        }
-    }
+
+
 The primary benefit of using lazy strings is to avoid unnecessary computations or memory allocations when a string's value might not be required in all execution paths.
 
-public class Main {
-    public static void main(String[] args) {
-        MyClass obj = new MyClass();
-        obj.abstractMethod();
-        MyInterface.staticMethod(); // Calls the static method directly on the interface
-    }
-}
