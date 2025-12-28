@@ -1,3 +1,817 @@
+## `yield` operator in JavaScript (explained from beginner → advanced)
+
+The **`yield` operator** is used **inside generator functions** to **pause execution and return a value**, then **resume later from the same place**.
+
+---
+
+## 1️⃣ What is a Generator?
+
+A **generator** is a special function that:
+
+* Can **pause**
+* Can **resume**
+* Produces values **one at a time**
+
+It is created using `function*`.
+
+```js
+function* gen() {
+  yield 1;
+  yield 2;
+  yield 3;
+}
+```
+
+---
+
+## 2️⃣ What does `yield` do?
+
+* Pauses the function
+* Returns a value
+* Remembers the state
+* Resumes from the next line when called again
+
+---
+
+## 3️⃣ Basic example
+
+```js
+function* numbers() {
+  yield 1;
+  yield 2;
+  yield 3;
+}
+
+const gen = numbers();
+
+console.log(gen.next()); // { value: 1, done: false }
+console.log(gen.next()); // { value: 2, done: false }
+console.log(gen.next()); // { value: 3, done: false }
+console.log(gen.next()); // { value: undefined, done: true }
+```
+
+---
+
+## 4️⃣ How `yield` works internally (important)
+
+Each `next()` call:
+
+1. Runs until it hits `yield`
+2. Returns the yielded value
+3. Pauses execution
+4. Resumes from next line on next `next()`
+
+Think of it as a **checkpoint**.
+
+---
+
+## 5️⃣ Real-world example (infinite sequence)
+
+```js
+function* counter() {
+  let i = 1;
+  while (true) {
+    yield i++;
+  }
+}
+
+const c = counter();
+c.next().value; // 1
+c.next().value; // 2
+c.next().value; // 3
+```
+
+✔ Memory efficient
+✔ Lazy evaluation
+
+---
+
+## 6️⃣ Using `yield` with `for...of`
+
+Generators are **iterable**.
+
+```js
+function* colors() {
+  yield "red";
+  yield "green";
+  yield "blue";
+}
+
+for (let color of colors()) {
+  console.log(color);
+}
+```
+
+---
+
+## 7️⃣ `yield` vs `return`
+
+| Feature         | yield | return |
+| --------------- | ----- | ------ |
+| Pauses function | ✅ Yes | ❌ No   |
+| Can resume      | ✅ Yes | ❌ No   |
+| Multiple values | ✅ Yes | ❌ No   |
+| Ends generator  | ❌ No  | ✅ Yes  |
+
+```js
+function* test() {
+  yield 1;
+  return 2;
+  yield 3; // ❌ never runs
+}
+```
+
+---
+
+## 8️⃣ Passing values INTO `yield` (advanced)
+
+```js
+function* demo() {
+  const x = yield 10;
+  console.log(x);
+}
+
+const g = demo();
+g.next();        // yields 10
+g.next(99);      // logs 99
+```
+
+📌 Value passed to `next(value)` becomes the result of `yield`.
+
+---
+
+## 9️⃣ `yield*` (delegate to another generator)
+
+```js
+function* gen1() {
+  yield 1;
+  yield 2;
+}
+
+function* gen2() {
+  yield* gen1();
+  yield 3;
+}
+
+[...gen2()]; // [1, 2, 3]
+```
+
+✔ Generator composition
+✔ Cleaner code
+
+---
+
+## 🔟 Common use cases
+
+* Custom iterators
+* Lazy data streams
+* Infinite sequences
+* State machines
+* Middleware-like flows (Redux Saga)
+
+---
+
+## ⚠️ Important rules
+
+* `yield` works **only inside `function*`**
+* Generators are **not async**
+* `yield` ≠ `await`
+
+---
+
+## 🧠 `yield` vs `await`
+
+| yield                  | await                 |
+| ---------------------- | --------------------- |
+| Pauses generator       | Pauses async function |
+| Manual resume (`next`) | Auto resume           |
+| Iteration-based        | Promise-based         |
+| Sync-like              | Async                 |
+
+---
+
+## 🎯 One-line interview answer
+
+> `yield` pauses a generator function and returns a value, allowing execution to resume later from the same point.
+Below is a **beginner-friendly, step-by-step explanation** of
+**Map, Set, WeakMap, and WeakSet in JavaScript** — with **simple examples**, **rules**, and **interview tips**.
+
+---
+
+# 1️⃣ Map
+
+### ❓ What is a Map?
+
+A **Map** stores **key–value pairs**, just like an object — **but better**.
+
+### ✅ Why Map instead of Object?
+
+* Keys can be **any type** (object, function, number)
+* Maintains **insertion order**
+* Better performance for frequent add/remove
+
+---
+
+### ✅ Example
+
+```js
+let map = new Map();
+
+map.set("name", "Shreya");
+map.set(1, "one");
+map.set({ id: 1 }, "object key");
+
+console.log(map.get("name")); // Shreya
+console.log(map.size);        // 3
+```
+
+---
+
+### 🔹 Common methods
+
+```js
+map.set(key, value)
+map.get(key)
+map.has(key)
+map.delete(key)
+map.clear()
+```
+
+---
+
+### 🔹 Looping over Map
+
+```js
+for (let [key, value] of map) {
+  console.log(key, value);
+}
+```
+
+---
+
+# 2️⃣ Set
+
+### ❓ What is a Set?
+
+A **Set** stores **unique values only** (no duplicates).
+
+---
+
+### ✅ Example
+
+```js
+let set = new Set();
+
+set.add(1);
+set.add(2);
+set.add(2); // ignored
+
+console.log(set); // {1, 2}
+```
+
+---
+
+### 🔹 Useful operations
+
+```js
+set.add(value)
+set.has(value)
+set.delete(value)
+set.size
+```
+
+---
+
+### 🔹 Remove duplicates from array
+
+```js
+let arr = [1, 2, 2, 3];
+let unique = [...new Set(arr)];
+
+console.log(unique); // [1, 2, 3]
+```
+
+---
+
+# 3️⃣ WeakMap
+
+### ❓ What is WeakMap?
+
+A **WeakMap** is like Map, but:
+
+* **Keys must be objects**
+* Keys are **weakly referenced**
+* Automatically cleaned by **Garbage Collector**
+
+---
+
+### ✅ Example
+
+```js
+let wm = new WeakMap();
+
+let user = { name: "Shreya" };
+wm.set(user, "secret data");
+
+console.log(wm.get(user)); // secret data
+```
+
+Now:
+
+```js
+user = null;
+// GC removes the entry automatically
+```
+
+✔ No memory leaks
+✔ Used for private data
+
+---
+
+### ❌ WeakMap limitations
+
+* ❌ No `.size`
+* ❌ Not iterable
+* ❌ Keys must be objects
+
+---
+
+# 4️⃣ WeakSet
+
+### ❓ What is WeakSet?
+
+A **WeakSet** is like Set, but:
+
+* Stores **objects only**
+* Objects are **weakly held**
+* Auto garbage collection
+
+---
+
+### ✅ Example
+
+```js
+let ws = new WeakSet();
+
+let obj = { id: 1 };
+ws.add(obj);
+
+console.log(ws.has(obj)); // true
+```
+
+After:
+
+```js
+obj = null;
+// Automatically removed
+```
+
+---
+
+### ❌ WeakSet limitations
+
+* ❌ No iteration
+* ❌ No size property
+* ❌ Only objects allowed
+
+---
+
+# 🔍 Key Differences (Very Important)
+
+| Feature           | Map       | Set    | WeakMap      | WeakSet      |
+| ----------------- | --------- | ------ | ------------ | ------------ |
+| Stores            | Key–Value | Values | Key–Value    | Values       |
+| Duplicate allowed | Keys ❌    | ❌      | Keys ❌       | ❌            |
+| Key type          | Any       | N/A    | Objects only | Objects only |
+| Iterable          | ✅         | ✅      | ❌            | ❌            |
+| Size              | ✅         | ✅      | ❌            | ❌            |
+| GC auto cleanup   | ❌         | ❌      | ✅            | ✅            |
+
+---
+
+# 🧠 When to use what?
+
+### ✅ Use Map when:
+
+* Keys are not strings
+* Need ordered key–value storage
+
+### ✅ Use Set when:
+
+* Need unique values
+* Removing duplicates
+
+### ✅ Use WeakMap when:
+
+* Associating metadata with objects
+* Avoid memory leaks
+
+### ✅ Use WeakSet when:
+
+* Tracking object existence
+* Lifecycle-based object storage
+
+---
+
+# 🎯 Interview one-liners
+
+* **Map** → Object but with better key support
+* **Set** → Array with unique values
+* **WeakMap** → Map with GC support
+* **WeakSet** → Set with GC support
+
+---
+## Promisify a function in JavaScript (Beginner → Clear Explanation)
+
+### ❓ What does **promisify** mean?
+
+To **promisify** a function means:
+
+> Convert a **callback-based function** into a **Promise-based function**
+
+---
+
+## 1️⃣ The problem (callback hell)
+
+Most old JavaScript / Node.js APIs use callbacks:
+
+```js
+function readData(callback) {
+  setTimeout(() => {
+    callback(null, "Data loaded");
+  }, 1000);
+}
+```
+
+Usage:
+
+```js
+readData((err, data) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(data);
+  }
+});
+```
+
+❌ Hard to read
+❌ Nested callbacks
+❌ Hard error handling
+
+---
+
+## 2️⃣ Promisified version (manual)
+
+### Step-by-step
+
+```js
+function readDataPromise() {
+  return new Promise((resolve, reject) => {
+    readData((err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+}
+```
+
+Usage:
+
+```js
+readDataPromise()
+  .then(data => console.log(data))
+  .catch(err => console.error(err));
+```
+
+---
+
+## 3️⃣ Using `async/await` (cleanest)
+
+```js
+async function load() {
+  try {
+    const data = await readDataPromise();
+    console.log(data);
+  } catch (err) {
+    console.error(err);
+  }
+}
+```
+
+✔ Cleaner
+✔ Linear flow
+
+---
+
+## 4️⃣ Generic `promisify` function (important!)
+
+This works for **Node-style callbacks**
+`callback(error, result)`
+
+```js
+function promisify(fn) {
+  return function (...args) {
+    return new Promise((resolve, reject) => {
+      fn(...args, (err, result) => {
+        if (err) reject(err);
+        else resolve(result);
+      });
+    });
+  };
+}
+```
+
+---
+
+### Usage example
+
+```js
+function sum(a, b, cb) {
+  setTimeout(() => {
+    cb(null, a + b);
+  }, 500);
+}
+
+const sumPromise = promisify(sum);
+
+sumPromise(2, 3).then(console.log); // 5
+```
+
+---
+
+## 5️⃣ Handling multiple callback values
+
+```js
+function getUser(cb) {
+  cb(null, "Shreya", 25);
+}
+
+function promisifyMulti(fn) {
+  return (...args) =>
+    new Promise((resolve, reject) => {
+      fn(...args, (err, ...results) => {
+        if (err) reject(err);
+        else resolve(results);
+      });
+    });
+}
+```
+
+---
+
+## 6️⃣ Preserving `this` context (important trap ⚠️)
+
+```js
+const obj = {
+  value: 10,
+  getValue(cb) {
+    cb(null, this.value);
+  }
+};
+
+const bad = promisify(obj.getValue);
+bad(); // ❌ undefined
+```
+
+### ✅ Fix
+
+```js
+const good = promisify(obj.getValue.bind(obj));
+good().then(console.log); // 10
+```
+
+---
+
+## 7️⃣ Node.js built-in `util.promisify`
+
+```js
+const { promisify } = require("util");
+const fs = require("fs");
+
+const readFileAsync = promisify(fs.readFile);
+
+readFileAsync("test.txt", "utf8")
+  .then(console.log)
+  .catch(console.error);
+```
+
+✔ Standard
+✔ Safe
+✔ Recommended
+
+---
+
+## 8️⃣ Common interview questions
+
+### Q: Can we promisify any function?
+
+❌ No
+✔ Only **callback-based async functions**
+
+---
+
+### Q: Difference between promisify and async/await?
+
+* **promisify** → converts function
+* **async/await** → consumes Promise
+
+---
+
+### Q: Why promisify?
+
+* Avoid callback hell
+* Better error handling
+* Modern async code
+
+---
+
+## 🧠 One-line summary
+
+> Promisify converts a callback-based function into a Promise so it can be used with `.then()` or `async/await`.
+
+---
+
+If you want next:
+
+* promisify vs Promise constructor
+* custom retry wrapper
+* promisify real fs/http examples
+* error propagation deep dive
+
+Just tell me 👍
+
+
+
+---
+
+## 1️⃣ BigInt (for very large numbers)
+
+### ❓ What is BigInt?
+
+`BigInt` is a JavaScript **primitive data type** used to store **integers larger than what `Number` can safely handle**.
+
+### ❗ Why do we need it?
+
+Normal `Number` in JS is safe only up to:
+
+```
+9,007,199,254,740,991  (2^53 - 1)
+```
+
+Beyond this, numbers lose accuracy.
+
+---
+
+### ✅ Example without BigInt (problem)
+
+```js
+let x = 9007199254740992;
+let y = 9007199254740993;
+
+console.log(x === y); // true ❌ (wrong!)
+```
+
+---
+
+### ✅ Using BigInt
+
+Add **`n`** at the end of the number:
+
+```js
+let x = 9007199254740992n;
+let y = 9007199254740993n;
+
+console.log(x === y); // false ✅
+```
+
+---
+
+### 🔹 BigInt rules
+
+```js
+let a = 10n;
+let b = 20n;
+
+console.log(a + b); // 30n
+```
+
+❌ You **cannot mix** `Number` and `BigInt`:
+
+```js
+10n + 5; // ❌ Error
+```
+
+✔ Convert explicitly:
+
+```js
+10n + BigInt(5); // 15n
+```
+
+---
+
+### 📌 When to use BigInt?
+
+* Large IDs
+* Cryptography
+* Financial systems
+* Large counters
+
+---
+
+## 2️⃣ Symbol (for unique identifiers)
+
+### ❓ What is Symbol?
+
+`Symbol` is a **primitive data type** used to create **unique values**, even if they look the same.
+
+---
+
+### ✅ Example
+
+```js
+let s1 = Symbol("id");
+let s2 = Symbol("id");
+
+console.log(s1 === s2); // false ❗
+```
+
+Even though descriptions are the same, **symbols are always unique**.
+
+---
+
+### 🔹 Why Symbol is useful?
+
+To avoid **property name conflicts** in objects.
+
+---
+
+### ✅ Object example
+
+```js
+let id = Symbol("id");
+
+let user = {
+  name: "Shreya",
+  [id]: 101
+};
+
+console.log(user[id]); // 101
+```
+
+✔ This property:
+
+* Won’t clash with other keys
+* Won’t appear in normal loops
+
+---
+
+### 🔹 Symbol not visible in loops
+
+```js
+for (let key in user) {
+  console.log(key); // name only
+}
+```
+
+---
+
+### 📌 When to use Symbol?
+
+* Unique object keys
+* Internal/private properties
+* Library/framework development
+
+---
+
+## 🧠 Quick Comparison
+
+| Feature    | BigInt         | Symbol               |
+| ---------- | -------------- | -------------------- |
+| Purpose    | Large integers | Unique identifiers   |
+| Type       | Primitive      | Primitive            |
+| Use case   | Huge numbers   | Avoid key collisions |
+| Comparable | Yes            | Always unique        |
+
+---
+
+### ✅ One-line summary
+
+* **BigInt** → for **very large numbers**
+* **Symbol** → for **unique, non-conflicting identifiers**
+
+If you want, I can also explain:
+
+* BigInt vs Number in interview style
+* Symbol vs private fields
+* Real-world use cases
+
+Just tell me 🙂
+
+
 Below is a **clear, beginner-friendly explanation of `synchronized` with different objects**, with **examples, diagrams (mental model)**, and **rules you must remember**. This topic is very important for **interviews and real multithreaded code**.
 
 ---
