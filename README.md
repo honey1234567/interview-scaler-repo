@@ -517,7 +517,9 @@ Just say 👍
 ##  Angulr
 https://codewithpawan.medium.com/angular-interview-questions-from-beginners-to-advance-part-2-c1f89892bee4
 
-https://testbook.com/interview/angular-coding-interview-questions
+https://codewithpawan.medium.com/angular-interview-questions-from-beginners-to-advance-part-1-7f135fe92de3
+
+https://codewithpawan.medium.com/angular-interview-questions-from-beginners-to-advance-part-3-5a0b0f97e202
 
 These are **RxJS (Reactive Programming)** concepts. I’ll explain them **slowly, intuitively, and with examples**, assuming beginner level.
 
