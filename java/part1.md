@@ -1,6 +1,6 @@
 ## splititerator
 https://javaconceptoftheday.com/differences-between-iterator-vs-spliterator-in-java-8/
-https://www.baeldung.com/java-spliterator
+
 
 ## strong,weak and phantom reference
 <img width="705" height="414" alt="image" src="https://github.com/user-attachments/assets/0464ac94-4b53-43a0-9cf6-67d039a69082" />
